@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:14
+    volumes:
+      - shop_postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./env/postgres.env
+  backend:
+    build: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    volumes:
+      - ./frontend/src:/code/src
+    environment:
+      NODE_OPTIONS: --openssl-legacy-provider
+      CHOKIDAR_USEPOLLING: true
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+volumes:
+  shop_postgres_data:
