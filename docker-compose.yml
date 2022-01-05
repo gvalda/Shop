@@ -6,7 +6,7 @@ services:
     volumes:
       - shop_postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ./env/postgres.env
+      - ./.env/postgres.env
   backend:
     build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
@@ -15,7 +15,7 @@ services:
     volumes:
       - ./backend:/app
     env_file:
-      - ./env/backend.env
+      - ./.env/backend.env
     depends_on:
       - db
   frontend:
@@ -23,7 +23,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./frontend/src:/code/src
+      - ./frontend/src:/app/src
     environment:
       NODE_OPTIONS: --openssl-legacy-provider
       CHOKIDAR_USEPOLLING: true
